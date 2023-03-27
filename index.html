@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>Exemplo de seletores em linha</title>
+    <script type="text/javascript" src="index.js"></script>
+    <style>
+      body {
+        background-color: #f2f2f2;
+      }
+
+      .sidebar {
+        width: 200px;
+        background-color: #58c4d8;
+        height: 100%;
+        position: fixed;
+        top: 0;
+        left: 0;
+        padding: 20px;
+        color: white;
+      }
+
+      .graph-container {
+        margin-left: 220px;
+        padding: 20px;
+      }
+
+      label {
+        display: block;
+        margin-bottom: 5px;
+      }
+
+      select {
+        margin-bottom: 10px;
+      }
+
+      .linha {
+        display: flex;
+        margin-bottom: 10px;
+      }
+
+      .linha label {
+        flex: 1;
+        margin-right: 10px;
+        text-align: right;
+      }
+
+      .linha select {
+        flex: 2;
+      }
+
+      #representacao-wrapper {
+        display: none;
+        margin-top: 20px;
+      }
+
+      #representacao-wrapper label {
+        margin-right: 10px;
+      }
+
+      #enviar {
+        margin-top: 20px;
+        padding: 10px 20px;
+        background-color: #58c4d8;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+      }
+
+      #enviar:hover {
+        background-color: #4da4b8;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="sidebar">
+      <h3>Menu</h3>
+      <form id="graph-form">
+        <label for="vertices">Número de vértices:</label>
+        <input type="number" id="vertices" name="vertices" required /><br />
+
+        <label for="arestas">Número de arestas:</label>
+        <input type="number" id="arestas" name="arestas" required /><br />
+
+        <label for="valorado">Valorado?</label>
+        <select id="valorado" name="valorado">
+          <option value="sim">Sim</option>
+          <option value="nao" selected>Não</option>
+        </select><br />
+
+        <label for="tipo">Tipo:</label>
+        <select id="tipo" name="tipo">
+          <option value="grafo" selected>Grafo</option>
+          <option value="digrafo">Digrafo</option>
+        </select><br />
+
+        <button type="submit">Enviar</button>
+      </form>
+    </div>
+
+    <div class="graph-container" id="linhas">
+      <!-- Aqui serão geradas as linhas de seletores de origem e destino -->
+    </div>
+
+    <div id="representacao-wrapper">
+      <label for="representacao">Selecione o tipo de representação:</label>
+      <select id="representacao" name="representacao">
+        <option value="adjacencia">Matriz de Adjacência</option>
+        <option value="incidencia">Matriz de Incidência</option>
+        <option value="lista">Lista</option>
+      </select>
+      <button id="enviar-representacao" onclick="recebe()">Enviar</button>
+    </div>
+
+    <script>
+        const form = document.querySelector("#graph-form");
+        const graphContainer = document.querySelector(".graph-container");
+      
+        form.addEventListener("submit", (event) => {
+          event.preventDefault();
+      
+          const numVertices = parseInt(form.vertices.value);
+          const numArestas = parseInt(form.arestas.value);
+          const valorado = form.valorado.value;
+          const tipo = form.tipo.value;
+          var arr = [];
+      
+          // Limpa o conteúdo anterior
+          graphContainer.innerHTML = "";
+      
+          //COLOCAR O VALORADO
+          // Gera as linhas de seletores de origem e destino para cada aresta
+          for (let i = 0; i < numArestas; i++) {
+            const linha = document.createElement("div");
+            linha.classList.add("linha");
+            linha.setAttribute("id", `linha_${i}`)
+      
+            const labelAresta = document.createElement("label");
+            labelAresta.textContent = `Aresta ${i + 1}:`;
+      
+            const selectOrigem = document.createElement("select");
+            selectOrigem.name = `origem-${i}`;
+            selectOrigem.setAttribute("id", `origem_${i}`)
+            for (let j = 0; j < numVertices; j++) {
+              const option = document.createElement("option");
+              option.value = String.fromCharCode(65 + j);
+              option.text = String.fromCharCode(65 + j);
+              selectOrigem.appendChild(option);
+            }
+      
+            const labelOrigem = document.createElement("label");
+            labelOrigem.textContent = "Origem:";
+            labelOrigem.appendChild(selectOrigem);
+      
+            const selectDestino = document.createElement("select");
+            selectDestino.name = `destino-${i}`;
+            selectDestino.setAttribute("id", `destino_${i}`)
+            for (let j = 0; j < numVertices; j++) {
+              const option = document.createElement("option");
+              option.value = String.fromCharCode(65 + j);
+              option.text = String.fromCharCode(65 + j);
+              selectDestino.appendChild(option);
+            }
+      
+            const labelDestino = document.createElement("label");
+            labelDestino.textContent = "Destino:";
+            labelDestino.appendChild(selectDestino);
+      
+            linha.appendChild(labelAresta);
+            linha.appendChild(labelOrigem);
+            linha.appendChild(labelDestino);
+      
+            graphContainer.appendChild(linha);
+          }
+      
+          // Cria o seletor de representação e o botão de envio
+          const representationSelector = document.createElement("select");
+          representationSelector.id = "representation-selector";
+          representationSelector.name = "representation-selector";
+          const optionAdjacency = document.createElement("option");
+          optionAdjacency.value = "adjacency";
+          optionAdjacency.text = "Matriz de Adjacência";
+          const optionIncidence = document.createElement("option");
+          optionIncidence.value = "incidence";
+          optionIncidence.text = "Matriz de Incidência";
+          const optionList = document.createElement("option");
+          optionList.value = "list";
+          optionList.text = "Lista";
+          representationSelector.appendChild(optionAdjacency);
+          representationSelector.appendChild(optionIncidence);
+          representationSelector.appendChild(optionList);
+      
+          const submitButton = document.createElement("button");
+          submitButton.type = "submit";
+          submitButton.textContent = "Enviar";
+          submitButton.addEventListener("click", recebe);
+      
+          const representationForm = document.createElement("form");
+          representationForm.id = "representation-form";
+          representationForm.appendChild(representationSelector);
+          representationForm.appendChild(submitButton);
+      
+          graphContainer.appendChild(representationForm);
+        });
+    </script>
+  </body>
+</html>
+
+      
