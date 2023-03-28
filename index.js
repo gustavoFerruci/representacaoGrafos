@@ -1,45 +1,51 @@
 function ma(info) {
-    console.log("entrou ma");
-    let linhas = colunas =  info[1];
-    let matriz = new Array(colunas);
-    let valores = new Array(linhas);
+    let tamanhoMatriz =  info.vertices; // O TAMANHO DA MA
+    let tamanhoArestas = info.arestas; // é possivel possuir mais arestas que vertices
+    let arestas = [];
 
-    for (var i = 0; i < linhas; i++) {
-        console.log("entrou for i");
-        for (let j = 0; j < 2; j++) {
-            console.log("entrou for j");
-            let aux = new Array(2); 
-            aux[0] = document.getElementById(`origem_${i}`).value;
-            aux[1] = document.getElementById(`destino_${i}`).value;
+    //---MATRIZ---
+    let matriz = [];
+    
+    // forma array de origem e destino
+    for (let i = 0; i < tamanhoArestas; i++) {
 
-            // aux [2] para o valorado tofix
-            valores[i] = aux;
+        let aux = {
+            origem : document.getElementById(`origem_${i}`).value, 
+            destino : document.getElementById(`destino_${i}`).value, 
+            valor : document.getElementById(`valor_${i}`).value
         }
-        
-        console.log("origem : "+ valores[i][0]+" destino : "+valores[i][1]);
 
+        arestas[i] = aux;
+        console.log(arestas[i].valor);
+        // let o = arestas[i].origem.charCodeAt(0);
+        // let d = arestas[i].destino.charCodeAt(0);
+        // console.log("origem : "+ (o-65) +"\n"); // ok isso deu certo
+        // console.log("destino : "+ (d-65) +"\n");
     }
+    
     //LINHA = ORIGEM || COLUNA = DESTINO
     //forma matriz
-    for (var i = 0; i < colunas; i++) 
-        matriz[i] = new Array(linhas);
-
-    console.log(parseInt(valores[1].charCodeAt(0)))
-    for (const aresta in valores) {
-        console.log(String.aresta[1].charCodeAt(0))
-        matriz[aresta[1].charCodeAt(0)-65][aresta[0].charCodeAt(0)-65] = 1;
+    for (let i = 0; i < tamanhoMatriz; i++) { 
+        matriz[i] = [];
+        for (let j = 0; j < tamanhoMatriz; j++) {
+            matriz[i][j] = 0;
+        }
     }
 
-    console.log("pos |0|0| : " + matriz[0][0]);
-    console.log("pos |0|1| : " + matriz[0][1]);
-    console.log("pos |0|2| : " + matriz[0][2]);
-    console.log("pos |1|0| : " + matriz[1][0]);
-    console.log("pos |1|1| : " + matriz[1][1]);
-    console.log("pos |1|2| : " + matriz[1][2]);
-    console.log("pos |2|0| : " + matriz[2][0]);
-    console.log("pos |2|1| : " + matriz[2][1]);
-    console.log("pos |2|2| : " + matriz[2][2]);
-    // para acessar o conteudo matriz[coluna][linha] 
+    //aloca valores
+    for (let i = 0; i < tamanhoArestas; i++) {
+        let o = arestas[i].origem.charCodeAt(0);
+        let d = arestas[i].destino.charCodeAt(0);
+        
+            matriz[o-65][d-65] = arestas[i].valor
+    }
+
+
+    for (let i = 0; i < tamanhoMatriz; i++) {
+        for (let j = 0; j < tamanhoMatriz; j++) {
+            console.log("["+ matriz[i][j]+"] ");
+        }
+    }
 }
 
 function mi(info) {
@@ -55,22 +61,18 @@ function converte() {
 }
 
 function recebe() {
-    console.log("recebe");
-    let info = new Array(4);
-    //vertices
-    info[1] = parseInt(document.getElementById('vertices').value);
-    //arestas
-    info[2] = parseInt(document.getElementById('arestas').value);
-    //valorado
-    info[3] = document.getElementById('valorado').value;
-    //grafo
-    info[4] = document.getElementById('tipo').value;
+    let representacao = document.getElementById('representacao').value;
+    let info = {
+        vertices : parseInt(document.getElementById('vertices').value),
+        arestas : parseInt(document.getElementById('arestas').value),
+        valorado : document.getElementById('valorado').value,
+        tipo : document.getElementById('tipo').value
+    }
 
-
-    if (document.getElementById('representacao').value == "adjacencia") {
+    if (representacao == "adjacencia") {
         console.log("ma");
         ma(info)
-    } else if (document.getElementById('representacao').value == "incidencia") {
+    } else if (representacao == "incidencia") {
         console.log("mi");
         mi(info)
     } else {

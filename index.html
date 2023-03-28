@@ -85,8 +85,8 @@
 
         <label for="valorado">Valorado?</label>
         <select id="valorado" name="valorado">
-          <option value="sim">Sim</option>
-          <option value="nao" selected>Não</option>
+          <option value="1">Sim</option>
+          <option value="0">Não</option>
         </select><br />
 
         <label for="tipo">Tipo:</label>
@@ -150,7 +150,7 @@
             }
       
             const labelOrigem = document.createElement("label");
-            labelOrigem.textContent = "Origem:";
+            labelOrigem.textContent = "Origem: ";
             labelOrigem.appendChild(selectOrigem);
       
             const selectDestino = document.createElement("select");
@@ -164,12 +164,24 @@
             }
       
             const labelDestino = document.createElement("label");
-            labelDestino.textContent = "Destino:";
+            labelDestino.textContent = "Destino: ";
             labelDestino.appendChild(selectDestino);
+
+            const inputValor = document.createElement("input");
+            inputValor.setAttribute("id", `valor_${i}`)
+            const labelValor = document.createElement("label");
+            labelValor.textContent = "Valor: ";
+            labelValor.appendChild(inputValor);
+
       
             linha.appendChild(labelAresta);
             linha.appendChild(labelOrigem);
             linha.appendChild(labelDestino);
+            if (valorado == 1) {
+              linha.appendChild(labelValor);
+            }
+            else
+              inputValor.setAttribute("value", 1);
       
             graphContainer.appendChild(linha);
           }
